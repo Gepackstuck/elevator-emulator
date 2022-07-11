@@ -1,24 +1,25 @@
 <template>
   <div class="wrapper">
     <div class="elevator-shaft">
-  <div v-bind:class="'elevator-doors elevator-doors'+this.currFloor">
+  <div v-bind:class="this.wait+' elevator-doors elevator-doors'+this.currFloor">
+    <p><strong>{{currFloor}} {{direction}}</strong></p>
   </div>
     </div>
     <div class="floors">
       <div class="floor">
-        <input type="button" v-on:click="setFloor(5)" value="5"/>
+        <input type="button" class="btn" v-on:click="setFloor(5)" value="5"/>
       </div>
       <div class="floor">
-        <input type="button" v-on:click="setFloor(4)"  value="4"/>
+        <input type="button" class="btn" v-on:click="setFloor(4)"  value="4"/>
       </div>
       <div class="floor">
-        <input type="button" v-on:click="setFloor(3)"  value="3"/>
+        <input type="button" class="btn" v-on:click="setFloor(3)"  value="3"/>
       </div>
       <div class="floor">
-        <input type="button" v-on:click="setFloor(2)"  value="2"/>
+        <input type="button" class="btn" v-on:click="setFloor(2)"  value="2"/>
       </div>
       <div class="floor">
-        <input type="button" v-on:click="setFloor(1)"  value="1"/>
+        <input type="button" class="btn" v-on:click="setFloor(1)"  value="1"/>
       </div>
     </div>
   </div>
@@ -34,6 +35,7 @@ export default {
       floor: [],
       followingFloor: 1,
       currFloor : 1,
+      wait: "",
     }
   },
   methods: {
@@ -46,14 +48,20 @@ export default {
         if (this.currFloor === this.followingFloor) {
           setTimeout(() => {
             this.nextFloor();
-          },2000)
-        }}, 3000);
+          },3000)
+          this.wait = "wait"
+          this.direction = ""
+        }}, 4000);
       setInterval(() => {
         if (this.currFloor < this.followingFloor) {
           this.upfloor();
+          this.wait = ""
+          this.direction = "↑"
           }
         if (this.currFloor > this.followingFloor) {
           this.downfloor();
+          this.wait = ""
+          this.direction = "↓"
           }
       }, 1000)
     }, 1000);
@@ -89,6 +97,15 @@ export default {
   display: flex;
   flex-direction: row
 }
+
+.btn{
+  display:block;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  padding: 0;
+}
+
 .floors {
   width: 100vh;
   display: flex;
@@ -114,5 +131,42 @@ export default {
   position: sticky;
   transition-duration: 1s;
   text-align: center;
+}
+
+.elevator-doors1 {
+transform: translate(0,406px);
+}
+
+.elevator-doors2 {
+transform: translate(0,305px);
+}
+
+.elevator-doors3 {
+transform: translate(0,203px);
+}
+
+.elevator-doors4 {
+transform: translate(0,101px);
+}
+
+.elevator-doors5 {
+transform: translate(0,0px);
+}
+.elevator-shaft {
+  border: 0.5px solid rgb(158, 158, 158);
+}
+
+.wait {
+  animation-name: blink;
+  animation-timing-function: linear;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 50%;
+    background-color: greenyellow;
+  }
 }
 </style>
