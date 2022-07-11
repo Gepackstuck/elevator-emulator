@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="elevator-shaft">
-  <div v-bind:class="this.wait+' elevator-doors elevator-doors'+this.currFloor">
+  <div v-bind:class="'elevator-doors elevator-doors'+this.currFloor">
   </div>
     </div>
     <div class="floors">
@@ -27,6 +27,60 @@
 <script>
 export default {
   name: 'ElevatorShaft',
+  data() {
+    return {
+      direction: null,
+      timer: null,
+      floor: [],
+      followingFloor: 1,
+      currFloor : 1,
+    }
+  },
+  methods: {
+    start() {
+      if (this.timer) {
+        return;
+      }
+      this.timer = setTimeout(() => {
+      setInterval(() => {
+        if (this.currFloor === this.followingFloor) {
+          setTimeout(() => {
+            this.nextFloor();
+          },2000)
+        }}, 3000);
+      setInterval(() => {
+        if (this.currFloor < this.followingFloor) {
+          this.upfloor();
+          }
+        if (this.currFloor > this.followingFloor) {
+          this.downfloor();
+          }
+      }, 1000)
+    }, 1000);
+  },
+    setFloor(num) {
+      this.floor.push(num);
+      this.start();
+    },
+    nextFloor() {
+      if (this.floor.length) {
+        this.followingFloor = this.floor.shift();
+        console.log ("Движемся на " + this.followingFloor + " этаж");
+      }
+    },
+    upfloor() {
+      if (this.currFloor < this.followingFloor) {
+        this.currFloor += 1;
+        console.log(this.currFloor)
+      }
+    },
+    downfloor() {
+      if (this.currFloor > this.followingFloor) {
+        this.currFloor -= 1;
+        console.log(this.currFloor)
+      }
+    },
+  }
   }
 </script>
 
@@ -51,6 +105,7 @@ export default {
 .floor input {
   margin-left: 20px;
 }
+
 .elevator-doors {
   width: 100px;
   height: 100px;
